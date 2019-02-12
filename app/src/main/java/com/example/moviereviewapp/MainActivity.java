@@ -12,7 +12,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-    
+
     private final String ORDER = "by-date";
     private final String API_KEY = "KoRB4K5LRHygfjCL2AH6iQ7NeUqDAGAB";
     private final int OFFSET = 0;
