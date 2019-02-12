@@ -5,18 +5,19 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-
-    //?order=by-date&api-key=KoRB4K5LRHygfjCL2AH6iQ7NeUqDAGAB&offset=0"
-
+    
     private final String ORDER = "by-date";
     private final String API_KEY = "KoRB4K5LRHygfjCL2AH6iQ7NeUqDAGAB";
     private final int OFFSET = 0;
+
+    private static final String TAG = "TAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +29,17 @@ public class MainActivity extends AppCompatActivity {
         movies.enqueue(new Callback<MovieLoader>() {
             @Override
             public void onResponse(Call<MovieLoader> call, Response<MovieLoader> response) {
-                generateData(response.body());
+                if (response.isSuccessful() && response.body() != null) {
+                    generateData(response.body());
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.toast_no_data, Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, response.errorBody().toString());
+                }
             }
 
             @Override
             public void onFailure(Call<MovieLoader> call, Throwable t) {
-                Log.d("TEST", t.getLocalizedMessage());
+                Log.e(TAG, t.getLocalizedMessage());
             }
         });
 
