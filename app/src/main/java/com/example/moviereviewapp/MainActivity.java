@@ -1,16 +1,19 @@
 package com.example.moviereviewapp;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.moviereviewapp.api.NYTApi;
 import com.example.moviereviewapp.api.RetrofitInstance;
+import com.example.moviereviewapp.model.Movie;
 import com.example.moviereviewapp.model.MoviesObject;
+
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -19,7 +22,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements linkClickListener {
 
 
     private final String ORDER = "by-date";
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         movieRecyclerView  = findViewById(R.id.movie_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         movieRecyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new MovieAdapter();
+        adapter = new MovieAdapter(this);
 
         movieRecyclerView.setAdapter(adapter);
 
@@ -79,5 +82,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void generateData(MoviesObject movies) {
         adapter.addMovies(movies.getList());
+    }
+
+    @Override
+    public void onClick(Movie movie) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(movie.getLink().getUrl()));
+        startActivity(intent);
     }
 }

@@ -15,11 +15,17 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
-    List<Movie> movies;
+interface linkClickListener {
+    void onClick(Movie movie);
+}
 
-    MovieAdapter() {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
+    private List<Movie> movies;
+    private linkClickListener listener;
+
+    MovieAdapter(linkClickListener listener) {
         movies = new ArrayList<>();
+        this.listener = listener;
     }
 
     void addMovies(List<Movie> movies) {
@@ -45,7 +51,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return movies.size();
     }
 
-    class MovieViewHolder extends RecyclerView.ViewHolder {
+    class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title;
         TextView rating;
         TextView headline;
@@ -65,6 +71,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             date = v.findViewById(R.id.date_view);
             summary = v.findViewById(R.id.summary_view);
             thumbnail = v.findViewById(R.id.thumbnail_image);
+            v.setOnClickListener(this);
         }
 
         void bindViews(MovieViewHolder viewHolder, int pos) {
@@ -75,10 +82,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             viewHolder.reviewer.setText(movie.getReviewer());
             viewHolder.date.setText(movie.getPublicationDate());
             viewHolder.summary.setText(movie.getSummary());
-            Picasso.with(context).load(movie.getThumbnail().getSrc()).resize(movie.getThumbnail().getWidth(), movie.getThumbnail().getHeight()).into(viewHolder.thumbnail);
+            Picasso.with(context).load(movie.getThumbnail().getSrc()).into(viewHolder.thumbnail);
         }
 
 
+        @Override
+        public void onClick(View view) {
+            listener.onClick(movies.get(getAdapterPosition()));
+        }
     }
 
 }
