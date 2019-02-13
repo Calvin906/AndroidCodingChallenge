@@ -4,6 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.moviereviewapp.api.NYTApi;
 import com.example.moviereviewapp.api.RetrofitInstance;
@@ -49,15 +52,18 @@ public class MainActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .cache()
+                .retry(5)
                 .subscribe(new Consumer<MoviesObject>() {
                     @Override
                     public void accept(MoviesObject moviesObject) throws Exception {
                         generateData(moviesObject);
+                        Log.v(TAG, "Reviews Downloaded");
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        Toast.makeText(MainActivity.this, "Error retrieving reviews", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, throwable.getMessage());
                     }
                 });
     }
@@ -66,12 +72,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (disposable != null) {
+            Log.d(TAG, "Dispose Called");
             disposable.dispose();
         }
     }
 
     private void generateData(MoviesObject movies) {
-
         adapter.addMovies(movies.getList());
     }
 }
