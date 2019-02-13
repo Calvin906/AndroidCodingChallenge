@@ -23,6 +23,6 @@ public class RetrofitInstance {
     public interface GetData {
 
         @GET("svc/movies/v2/reviews/dvd-picks.json")
-        public Call<MovieLoader> getData(@Query("order") String order, @Query("api-key") String key, @Query("offset") int offset);
+        public Call<MoviesObject> getData(@Query("order") String order, @Query("api-key") String key, @Query("offset") int offset);
     }
 }

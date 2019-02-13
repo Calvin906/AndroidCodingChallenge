@@ -72,7 +72,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             viewHolder.rating.setText(movie.getRating());
             viewHolder.headline.setText(movie.getHeadline());
             viewHolder.reviewer.setText(movie.getReviewer());
-            viewHolder.date.setText(movie.getDate());
+            viewHolder.date.setText(movie.getPublicationDate());
             viewHolder.summary.setText(movie.getSummary());
             Picasso.with(context).load(movie.getThumbnail().getSrc()).resize(movie.getThumbnail().getWidth(), movie.getThumbnail().getHeight()).into(viewHolder.thumbnail);
         }
@@ -80,24 +80,4 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     }
 
-//     @SerializedName("display_title")
-//    private String title;
-//
-//    @SerializedName("mpaa_rating")
-//    private String rating;
-//
-//    @SerializedName("headline")
-//    private String headline;
-//
-//    @SerializedName("byline")
-//    private String reviewer;
-//
-//    @SerializedName("publication_date")
-//    private String date;
-//
-//    @SerializedName("summary_short")
-//    private String summary;
-//
-//    @SerializedName("multimedia")
-//    private MovieThumbnail thumbnail;
 }

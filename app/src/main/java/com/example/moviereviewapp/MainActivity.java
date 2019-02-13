@@ -25,27 +25,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RetrofitInstance.GetData retInstance = RetrofitInstance.getRetrofitInstance().create(RetrofitInstance.GetData.class);
-        final Call<MovieLoader> movies = retInstance.getData(ORDER, API_KEY, OFFSET);
-        movies.enqueue(new Callback<MovieLoader>() {
+        final Call<MoviesObject> movies = retInstance.getData(ORDER, API_KEY, OFFSET);
+        movies.enqueue(new Callback<MoviesObject>() {
             @Override
-            public void onResponse(Call<MovieLoader> call, Response<MovieLoader> response) {
+            public void onResponse(Call<MoviesObject> call, Response<MoviesObject> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     generateData(response.body());
                 } else {
-                    Toast.makeText(MainActivity.this, R.string.toast_no_data, Toast.LENGTH_SHORT).show();
                     Log.d(TAG, response.errorBody().toString());
                 }
             }
 
             @Override
-            public void onFailure(Call<MovieLoader> call, Throwable t) {
+            public void onFailure(Call<MoviesObject> call, Throwable t) {
                 Log.e(TAG, t.getLocalizedMessage());
             }
         });
 
     }
 
-    private void generateData(MovieLoader movies) {
+    private void generateData(MoviesObject movies) {
         RecyclerView movieRecyclerView  = findViewById(R.id.movie_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         movieRecyclerView.setLayoutManager(linearLayoutManager);
