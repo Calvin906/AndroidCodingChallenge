@@ -1,4 +1,4 @@
-package com.example.moviereviewapp;
+package com.example.moviereviewapp.model;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +11,6 @@ public class MoviesObject {
 
     public MoviesObject(List<Movie> list) { this.list = list; }
 
-    List<Movie> getList() { return list; }
+    public List<Movie> getList() { return list; }
 
 }

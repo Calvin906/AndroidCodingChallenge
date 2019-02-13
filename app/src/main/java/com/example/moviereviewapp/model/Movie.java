@@ -1,8 +1,8 @@
-package com.example.moviereviewapp;
+package com.example.moviereviewapp.model;
 
 import com.google.gson.annotations.SerializedName;
 
-class Movie {
+public class Movie {
 
     @SerializedName("display_title")
     private String title;
