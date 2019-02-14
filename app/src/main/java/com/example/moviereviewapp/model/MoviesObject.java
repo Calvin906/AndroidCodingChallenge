@@ -9,8 +9,12 @@ public class MoviesObject {
     @SerializedName("results")
     List<Movie> list;
 
-    public MoviesObject(List<Movie> list) { this.list = list; }
+    public MoviesObject(List<Movie> list) {
+        this.list = list;
+    }
 
-    public List<Movie> getList() { return list; }
+    public List<Movie> getList() {
+        return list;
+    }
 
 }

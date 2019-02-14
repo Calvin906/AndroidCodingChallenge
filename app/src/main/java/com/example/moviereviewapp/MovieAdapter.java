@@ -102,13 +102,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             this.movie = movie;
             title.setText(movie.getTitle());
             rating.setText(movie.getRating());
-            criticPick.setText(String.valueOf(movie.getCriticPick()));
-            byline.setText(movie.getReviewer());
+            criticPick.setText(itemView.getContext().getString(R.string.critic_pick,movie.getCriticPick()));
+            byline.setText(itemView.getContext().getString(R.string.reviewer, movie.getReviewer()));
             headline.setText(movie.getHeadline());
-            summary.setText(movie.getSummary());
-            publicationDate.setText(movie.getPublicationDate());
-            openingDate.setText(movie.getOpeningDate());
-            dateUpdated.setText(convertToLocal(movie.getDateUpdated()));
+            summary.setText(itemView.getContext().getString(R.string.summary, movie.getSummary()));
+            publicationDate.setText(itemView.getContext().getString(R.string.publication_date, movie.getPublicationDate()));
+            openingDate.setText(itemView.getContext().getString(R.string.opening_date, movie.getOpeningDate()));
+            dateUpdated.setText(itemView.getContext().getString(R.string.updated_date, convertToLocal(movie.getDateUpdated())));
             Picasso.with(itemView.getContext()).load(movie.getThumbnail().getSrc()).into(thumbnail);
         }
 

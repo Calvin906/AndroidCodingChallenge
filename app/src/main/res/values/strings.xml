@@ -2,4 +2,12 @@
     <string name="app_name">MovieReviewApp</string>
     <string name="image_description">Movie Thumbnail</string>
     <string name="toast_no_data">No Data Returned</string>
+
+    <!--Identifiers for views-->
+    <string name="reviewer">Reviewer: %1$s</string>
+    <string name="critic_pick">Critic Rating: %1$d</string>
+    <string name="publication_date">Publication Date: %1$s</string>
+    <string name="opening_date">Opening Date: %1$s</string>
+    <string name="updated_date">Last Modified: %1$s</string>
+    <string name="summary">Summary: %1$s</string>
 </resources>

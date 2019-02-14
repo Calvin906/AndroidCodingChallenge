@@ -17,7 +17,6 @@
         android:id="@+id/title_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/thumbnail_image"
         android:layout_centerHorizontal="true" />
 
     <TextView

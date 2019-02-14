@@ -38,8 +38,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterListe
     private NYTApi nytApi;
     private Retrofit retrofit;
 
-    @BindView(R.id.movie_recycler_view) RecyclerView movieRecyclerView;
-    @BindView(R.id.loading_bar) ProgressBar spinner;
+    @BindView(R.id.movie_recycler_view)
+    RecyclerView movieRecyclerView;
+    @BindView(R.id.loading_bar)
+    ProgressBar spinner;
 
 
     private static final String TAG = "TAG";
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapterListe
         loadData(OFFSET);
     }
 
-     private void loadData(int offset) {
+    private void loadData(int offset) {
         disposable = nytApi.getMovies(ORDER, API_KEY, offset)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
