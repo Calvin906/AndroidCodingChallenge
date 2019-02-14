@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">MovieReviewApp</string>
-
+    <string name="image_description">Movie Thumbnail</string>
     <string name="toast_no_data">No Data Returned</string>
 </resources>

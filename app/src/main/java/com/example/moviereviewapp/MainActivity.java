@@ -14,7 +14,8 @@ import com.example.moviereviewapp.api.RetrofitInstance;
 import com.example.moviereviewapp.model.Movie;
 import com.example.moviereviewapp.model.MoviesObject;
 
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -22,16 +23,16 @@ import io.reactivex.schedulers.Schedulers;
 
 import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity implements linkClickListener {
+public class MainActivity extends AppCompatActivity implements LinkClickListener {
 
 
-    private final String ORDER = "by-date";
+    private final String ORDER = "by-publicationDate";
     private final String API_KEY = "KoRB4K5LRHygfjCL2AH6iQ7NeUqDAGAB";
     private final int OFFSET = 0;
 
     private Disposable disposable;
     private MovieAdapter adapter;
-    private RecyclerView movieRecyclerView;
+    @BindView(R.id.movie_recycler_view) RecyclerView movieRecyclerView;
 
 
     private static final String TAG = "TAG";
@@ -40,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements linkClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        movieRecyclerView  = findViewById(R.id.movie_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         movieRecyclerView.setLayoutManager(linearLayoutManager);
         adapter = new MovieAdapter(this);

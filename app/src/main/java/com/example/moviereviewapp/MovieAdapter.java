@@ -1,6 +1,5 @@
 package com.example.moviereviewapp;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,15 +14,18 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-interface linkClickListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+interface LinkClickListener {
     void onClick(Movie movie);
 }
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     private List<Movie> movies;
-    private linkClickListener listener;
+    private LinkClickListener listener;
 
-    MovieAdapter(linkClickListener listener) {
+    MovieAdapter(LinkClickListener listener) {
         movies = new ArrayList<>();
         this.listener = listener;
     }
@@ -37,13 +39,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_view, parent, false);
-        return new MovieViewHolder(view);
+        return new MovieViewHolder(view, listener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         MovieViewHolder dataHolder = holder;
-        dataHolder.bindViews(holder, position);
+        dataHolder.bindViews(movies.get(position));
     }
 
     @Override
@@ -51,44 +53,41 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return movies.size();
     }
 
-    class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView title;
-        TextView rating;
-        TextView headline;
-        TextView reviewer;
-        TextView date;
-        TextView summary;
-        ImageView thumbnail;
-        Context context;
+    static class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        @BindView(R.id.title_view) TextView title;
+        @BindView(R.id.mpaa_rating_view) TextView rating;
+        @BindView(R.id.headline_view) TextView headline;
+        @BindView(R.id.byline_view) TextView reviewer;
+        @BindView(R.id.publication_date_view) TextView publicationDate;
+        @BindView(R.id.summary_view) TextView summary;
+        @BindView(R.id.thumbnail_image) ImageView thumbnail;
 
-        public MovieViewHolder(View v) {
+        private final LinkClickListener listener;
+        private Movie movie;
+
+
+        MovieViewHolder(View v, LinkClickListener listener) {
             super(v);
-            context = v.getContext();
-            title = v.findViewById(R.id.title_view);
-            rating = v.findViewById(R.id.rating_view);
-            headline = v.findViewById(R.id.headline_view);
-            reviewer = v.findViewById(R.id.reviewer_view);
-            date = v.findViewById(R.id.date_view);
-            summary = v.findViewById(R.id.summary_view);
-            thumbnail = v.findViewById(R.id.thumbnail_image);
+            this.listener = listener;
+            ButterKnife.bind(this, itemView);
             v.setOnClickListener(this);
         }
 
-        void bindViews(MovieViewHolder viewHolder, int pos) {
-            Movie movie = movies.get(pos);
-            viewHolder.title.setText(movie.getTitle());
-            viewHolder.rating.setText(movie.getRating());
-            viewHolder.headline.setText(movie.getHeadline());
-            viewHolder.reviewer.setText(movie.getReviewer());
-            viewHolder.date.setText(movie.getPublicationDate());
-            viewHolder.summary.setText(movie.getSummary());
-            Picasso.with(context).load(movie.getThumbnail().getSrc()).into(viewHolder.thumbnail);
+        void bindViews(Movie movie) {
+            this.movie = movie;
+            title.setText(movie.getTitle());
+            rating.setText(movie.getRating());
+            headline.setText(movie.getHeadline());
+            reviewer.setText(movie.getReviewer());
+            publicationDate.setText(movie.getPublicationDate());
+            summary.setText(movie.getSummary());
+            Picasso.with(itemView.getContext()).load(movie.getThumbnail().getSrc()).into(thumbnail);
         }
 
 
         @Override
         public void onClick(View view) {
-            listener.onClick(movies.get(getAdapterPosition()));
+            listener.onClick(movie);
         }
     }
 
