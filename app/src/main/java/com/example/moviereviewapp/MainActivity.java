@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.moviereviewapp.api.NYTApi;
@@ -23,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity implements LinkClickListener {
+public class MainActivity extends AppCompatActivity implements MovieAdapterListener {
 
 
     private final String ORDER = "by-publicationDate";
@@ -32,7 +34,12 @@ public class MainActivity extends AppCompatActivity implements LinkClickListener
 
     private Disposable disposable;
     private MovieAdapter adapter;
+
+    private NYTApi nytApi;
+    private Retrofit retrofit;
+
     @BindView(R.id.movie_recycler_view) RecyclerView movieRecyclerView;
+    @BindView(R.id.loading_bar) ProgressBar spinner;
 
 
     private static final String TAG = "TAG";
@@ -49,10 +56,14 @@ public class MainActivity extends AppCompatActivity implements LinkClickListener
 
         movieRecyclerView.setAdapter(adapter);
 
-        Retrofit retrofit = RetrofitInstance.getRetrofitInstance();
-        NYTApi nytApi = retrofit.create(NYTApi.class);
+        retrofit = RetrofitInstance.getRetrofitInstance();
+        nytApi = retrofit.create(NYTApi.class);
 
-        disposable = nytApi.getMovies(ORDER, API_KEY, OFFSET)
+        loadData(OFFSET);
+    }
+
+     private void loadData(int offset) {
+        disposable = nytApi.getMovies(ORDER, API_KEY, offset)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .cache()
@@ -60,8 +71,9 @@ public class MainActivity extends AppCompatActivity implements LinkClickListener
                 .subscribe(new Consumer<MoviesObject>() {
                     @Override
                     public void accept(MoviesObject moviesObject) throws Exception {
-                        generateData(moviesObject);
+                        handleMovieUpdate(moviesObject);
                         Log.v(TAG, "Reviews Downloaded");
+
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -81,7 +93,9 @@ public class MainActivity extends AppCompatActivity implements LinkClickListener
         }
     }
 
-    private void generateData(MoviesObject movies) {
+    private void handleMovieUpdate(MoviesObject movies) {
+        spinner.setVisibility(View.GONE);
+        movieRecyclerView.setVisibility(View.VISIBLE);
         adapter.addMovies(movies.getList());
     }
 
@@ -89,5 +103,10 @@ public class MainActivity extends AppCompatActivity implements LinkClickListener
     public void onClick(Movie movie) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(movie.getLink().getUrl()));
         startActivity(intent);
+    }
+
+    @Override
+    public void onRequestLoadMore(int index) {
+        loadData(index);
     }
 }

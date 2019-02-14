@@ -17,21 +17,23 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-interface LinkClickListener {
+interface MovieAdapterListener {
     void onClick(Movie movie);
+
+    void onRequestLoadMore(int index);
 }
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     private List<Movie> movies;
-    private LinkClickListener listener;
+    private MovieAdapterListener listener;
 
-    MovieAdapter(LinkClickListener listener) {
+    MovieAdapter(MovieAdapterListener listener) {
         movies = new ArrayList<>();
         this.listener = listener;
     }
 
     void addMovies(List<Movie> movies) {
-        this.movies = movies;
+        this.movies.addAll(movies);
         notifyDataSetChanged();
     }
 
@@ -44,6 +46,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
+        if (position == getItemCount()-1) {
+            listener.onRequestLoadMore(position);
+        }
         MovieViewHolder dataHolder = holder;
         dataHolder.bindViews(movies.get(position));
     }
@@ -56,17 +61,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     static class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.title_view) TextView title;
         @BindView(R.id.mpaa_rating_view) TextView rating;
+        @BindView(R.id.critic_pick_view) TextView criticPick;
+        @BindView(R.id.byline_view) TextView byline;
         @BindView(R.id.headline_view) TextView headline;
-        @BindView(R.id.byline_view) TextView reviewer;
-        @BindView(R.id.publication_date_view) TextView publicationDate;
         @BindView(R.id.summary_view) TextView summary;
+        @BindView(R.id.publication_date_view) TextView publicationDate;
+        @BindView(R.id.opening_date_view) TextView openingDate;
+        @BindView(R.id.date_updated_view) TextView dateUpdated;
         @BindView(R.id.thumbnail_image) ImageView thumbnail;
 
-        private final LinkClickListener listener;
+        private final MovieAdapterListener listener;
         private Movie movie;
 
 
-        MovieViewHolder(View v, LinkClickListener listener) {
+        MovieViewHolder(View v, MovieAdapterListener listener) {
             super(v);
             this.listener = listener;
             ButterKnife.bind(this, itemView);
@@ -77,10 +85,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             this.movie = movie;
             title.setText(movie.getTitle());
             rating.setText(movie.getRating());
+            criticPick.setText(String.valueOf(movie.getCriticPick()));
+            byline.setText(movie.getReviewer());
             headline.setText(movie.getHeadline());
-            reviewer.setText(movie.getReviewer());
-            publicationDate.setText(movie.getPublicationDate());
             summary.setText(movie.getSummary());
+            publicationDate.setText(movie.getPublicationDate());
+            openingDate.setText(movie.getOpeningDate());
+            dateUpdated.setText(movie.getDateUpdated());
             Picasso.with(itemView.getContext()).load(movie.getThumbnail().getSrc()).into(thumbnail);
         }
 
